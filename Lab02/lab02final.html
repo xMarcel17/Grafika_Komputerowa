@@ -48,31 +48,28 @@ function startGL()
   
   //Opis sceny 3D, położenie punktów w przestrzeni 3D w formacie X,Y,Z 
   let vertexPosition = [
-  //Top
-    -1.0, +1.0, -1.0,  -1.0, +1.0, +1.0,  +1.0, +1.0, +1.0, //3 punkty po 3 składowe - X1,Y1,Z1, X2,Y2,Z2, X3,Y3,Z3 - 1 trójkąt
-    -1.0, +1.0, -1.0,  +1.0, +1.0, +1.0,  +1.0, +1.0, -1.0,
-  //Left
-    -1.0, -1.0, +1.0,  -1.0, +1.0, +1.0,  -1.0, -1.0, -1.0,
-    -1.0, -1.0, -1.0,  -1.0, +1.0, +1.0,  -1.0, +1.0, -1.0,
-  //Right
-    +1.0, +1.0, +1.0,  +1.0, -1.0, +1.0,  +1.0, -1.0, -1.0,
-    +1.0, +1.0, +1.0,  +1.0, -1.0, -1.0,  +1.0, +1.0, -1.0,
-  //Front
-    +1.0, -1.0, +1.0,  +1.0, +1.0, +1.0,  -1.0, -1.0, +1.0,
-    -1.0, +1.0, +1.0,  -1.0, -1.0, +1.0,  +1.0, +1.0, +1.0,
-  //Back
-    +1.0, +1.0, -1.0,  +1.0, -1.0, -1.0,  -1.0, -1.0, -1.0,
-    +1.0, +1.0, -1.0,  -1.0, -1.0, -1.0,  -1.0, +1.0, -1.0,
-  //Bottom
-    -1.0, -1.0, +1.0,  -1.0, -1.0, -1.0,  +1.0, -1.0, +1.0,
-    +1.0, -1.0, +1.0,  -1.0, -1.0, -1.0,  +1.0, -1.0, -1.0
+  //First
+    -0.5, +0.75, +1.0,  -0.5, -0.75, +1.0,  -0.25, +0.75, +1.0, //3 punkty po 3 składowe - X1,Y1,Z1, X2,Y2,Z2, X3,Y3,Z3 - 1 trójkąt
+    -0.5, -0.75, +1.0,  -0.25, -0.75, +1.0,  -0.25, +0.75, +1.0,
+  //Second
+    -0.25, +0.75, +1.0,  -0.25, +0.5, +1.0,  +0.5, +0.75, +1.0,
+    -0.25, +0.5, +1.0,  +0.5, +0.5, +1.0,  +0.5, +0.75, +1.0,
+  //Third
+    -0.25, +0.25, +1.0,  -0.25, 0.0, +1.0,  +0.5, +0.25, +1.0,
+    -0.25, 0.0, +1.0,  +0.5, 0.0, +1.0,  +0.5, +0.25, +1.0, 
+  //Fourth
+    +0.25, +0.5, +1.0,  +0.5, +0.5, +1.0,  +0.25, +0.25, +1.0,  
+    +0.5, +0.25, +1.0,  +0.5, +0.5, +1.0,  +0.25, +0.25, +1.0,
+  //Fifth
+    -0.25, 0.0, +1.0,  0.03, 0.0, +1.0,  +0.25, -0.75, +1.0,  
+    0.03, 0.0, +1.0,  +0.53, -0.75, +1.0,  +0.25, -0.75, +1.0,
   ]
   
   let vertexPositionBuffer = gl.createBuffer(); //Stworzenie tablicy w pamieci karty graficznej
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPosition), gl.STATIC_DRAW);
   vertexPositionBuffer.itemSize = 3; //zdefiniowanie liczby współrzednych per wierzchołek
-  vertexPositionBuffer.numItems = 12; //Zdefinoiowanie liczby punktów w naszym buforze
+  vertexPositionBuffer.numItems = 10; //Zdefinoiowanie liczby punktów w naszym buforze
   
   //Macierze opisujące położenie wirtualnej kamery w przestrzenie 3D
   let aspect = gl.viewportWidth/gl.viewportHeight;
@@ -85,12 +82,12 @@ function startGL()
    0                         ,0                           ,-(zFar+zNear)/(zFar-zNear)  , -1,
    0                         ,0                           ,-(2*zFar*zNear)/(zFar-zNear) ,0.0,
   ];
-  let angle = 45.0; //Macierz transformacji świata - określenie położenia kamery 
+  let angle = 0.0; //Macierz transformacji świata - określenie położenia kamery 
   let uMVMatrix = [
   Math.cos(angle*Math.PI/180.0),-Math.sin(angle*Math.PI/180.0),0,0, //Macierz Rotacji
   Math.sin(angle*Math.PI/180.0),Math.cos(angle*Math.PI/180.0),0,0,
   0,0,1,0.0,
-  0,0,-5,1 //Położenie kamery
+  0,0,-4,1 //Położenie kamery
   ];
   
   //alert(uPMatrix);
