@@ -83,58 +83,96 @@ function startGL()
   
   //Opis sceny 3D, położenie punktów w przestrzeni 3D w formacie X,Y,Z 
   let vertexPosition = [
-  //Top
+  //TopFirst
     -1.0, +1.0, -1.0,  -1.0, +1.0, +1.0,  +1.0, +1.0, +1.0, //3 punkty po 3 składowe - X1,Y1,Z1, X2,Y2,Z2, X3,Y3,Z3 - 1 trójkąt
     -1.0, +1.0, -1.0,  +1.0, +1.0, +1.0,  +1.0, +1.0, -1.0,
-  //Left
+  //LeftFirst
     -1.0, -1.0, +1.0,  -1.0, +1.0, +1.0,  -1.0, -1.0, -1.0,
     -1.0, -1.0, -1.0,  -1.0, +1.0, +1.0,  -1.0, +1.0, -1.0,
-  //Right
+  //RightFirst
     +1.0, +1.0, +1.0,  +1.0, -1.0, +1.0,  +1.0, -1.0, -1.0,
     +1.0, +1.0, +1.0,  +1.0, -1.0, -1.0,  +1.0, +1.0, -1.0,
-  //Front
+  //FrontFirst
     +1.0, -1.0, +1.0,  +1.0, +1.0, +1.0,  -1.0, -1.0, +1.0,
     -1.0, +1.0, +1.0,  -1.0, -1.0, +1.0,  +1.0, +1.0, +1.0,
-  //Back
+  //BackFirst
     +1.0, +1.0, -1.0,  +1.0, -1.0, -1.0,  -1.0, -1.0, -1.0,
     +1.0, +1.0, -1.0,  -1.0, -1.0, -1.0,  -1.0, +1.0, -1.0,
-  //Bottom
+  //BottomFirst
     -1.0, -1.0, +1.0,  -1.0, -1.0, -1.0,  +1.0, -1.0, +1.0,
-    +1.0, -1.0, +1.0,  -1.0, -1.0, -1.0,  +1.0, -1.0, -1.0
+    +1.0, -1.0, +1.0,  -1.0, -1.0, -1.0,  +1.0, -1.0, -1.0,
+
+  //FloorTop
+    -21.5, -1.0, +21.5,  -21.5, -1.0, -21.5,  +21.5, -1.0, +21.5,
+    +21.5, -1.0, +21.5,  -21.5, -1.0, -21.5,  +21.5, -1.0, -21.5,
+  //FloorLeft
+    -21.5, -1.0, +21.5,  -21.5, -1.0, -21.5,  +21.5, -1.0, +21.5,
+    +21.5, -1.0, +21.5,  -21.5, -1.0, -21.5,  +21.5, -1.0, -21.5,
+  //FloorRight
+    +21.5, -1.0, +21.5,  +21.5, -1.0, -21.5,  +21.5, -1.25, +21.5,
+    +21.5, -1.25, +21.5,  +21.5, -1.25, -21.5,  +21.5, -1.0, -21.5,
+  //FloorFront
+    -21.5, -1.0, +21.5,   +21.5, -1.0, +21.5,  +21.5, -1.25, +21.5,
+    +21.5, -1.25, +21.5,  -21.5, -1.0, +21.5,  -21.5, -1.25, +21.5,
+  //FloorBack
+    -21.5, -1.0, -21.5,  -21.5, -1.0, -21.5,  +21.5, -1.25, -21.5,
+    +21.5, -1.25, -21.5,  -21.5, -1.25, -21.5,  +21.5, -1.0, -21.5,
+  //FloorBottom
+    -21.5, -1.25, +21.5,  -21.5, -1.25, -21.5,  +21.5, -1.25, +21.5,
+    +21.5, -1.25, +21.5,  -21.5, -1.25, -21.5,  +21.5, -1.25, -21.5,
   ]
   
   vertexPositionBuffer = gl.createBuffer(); //Stworzenie tablicy w pamieci karty graficznej
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPosition), gl.STATIC_DRAW);
   vertexPositionBuffer.itemSize = 3; //zdefiniowanie liczby współrzednych per wierzchołek
-  vertexPositionBuffer.numItems = 12; //Zdefinoiowanie liczby punktów w naszym buforze
+  vertexPositionBuffer.numItems = 24; //Zdefinoiowanie liczby punktów w naszym buforze
   
   //Opis sceny 3D, kolor każdego z wierzchołków
   let vertexColor = [
-  //Top
+  //TopFirst
     1.0, 1.0, 0.0,  1.0, 1.0, 0.0,  1.0, 1.0, 0.0, //3 punkty po 3 składowe - R1,G1,B1, R2,G2,B2, R3,G3,B3 - 1 trójkąt
     1.0, 1.0, 0.0,  1.0, 1.0, 0.0,  1.0, 1.0, 0.0,
-  //Left
+  //LeftFirst
     0.5, 1.0, 0.0,  0.5, 1.0, 0.0,  0.5, 1.0, 0.0,
     0.5, 1.0, 0.0,  0.5, 1.0, 0.0,  0.5, 1.0, 0.0,
-  //Right
+  //RightFirst
     0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0,
     0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0,
-  //Front
+  //FrontFirst
     0.5, 0.1, 0.0,  0.5, 0.1, 0.0,  0.5, 0.1, 0.0,
     0.5, 0.1, 0.0,  0.5, 0.1, 0.0,  0.5, 0.1, 0.0,
-  //Back
+  //BackFirst
     0.75, 0.0, 1.0,  0.75, 0.0, 1.0,  0.75, 0.0, 1.0,
     0.75, 0.0, 1.0,  0.75, 0.0, 1.0,  0.75, 0.0, 1.0,
-  //Bottom
+  //BottomFirst
     0.0, 1.0, 1.0,  0.0, 1.0, 1.0,  0.0, 1.0, 1.0,
     0.0, 1.0, 1.0,  0.0, 1.0, 1.0,  0.0, 1.0, 1.0,
+
+  //FloorTop
+    0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  0.5, 0.5, 0.5,
+    0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  0.5, 0.5, 0.5,
+  //FloorLeft
+    0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  0.5, 0.5, 0.5,
+    0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  
+  //FloorRight
+    0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0,
+    0.0, 0.0, 0.0,  0.0, 0.0, 0.0,  0.0, 0.0, 0.0,
+  //FloorFront
+    0.5, 0.1, 0.0,  0.5, 0.1, 0.0,  0.5, 0.1, 0.0,
+    0.5, 0.1, 0.0,  0.5, 0.1, 0.0,  0.5, 0.1, 0.0,
+  //FloorBack
+    0.75, 0.0, 1.0,  0.75, 0.0, 1.0,  0.75, 0.0, 1.0,
+    0.75, 0.0, 1.0,  0.75, 0.0, 1.0,  0.75, 0.0, 1.0, 
+  //FloorBottom
+    0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  0.5, 0.5, 0.5,
+    0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  
   ]
   vertexColorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColor), gl.STATIC_DRAW);
   vertexColorBuffer.itemSize = 3;
-  vertexColorBuffer.numItems = 12;
+  vertexColorBuffer.numItems = 24;
   
   
   //Macierze opisujące położenie wirtualnej kamery w przestrzenie 3D
@@ -155,7 +193,7 @@ function startGL()
 var angleZ = 0.0;
 var angleY = 0.0;
 var angleX = 0.0;
-var tz = -5.0;
+var tz = -46.0;
 
 function Tick()
 {  
