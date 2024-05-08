@@ -10,16 +10,7 @@ var vertexColorBuffer;
 var vertexCoordsBuffer;
 var vertexNormalBuffer;
 
-var object1x = 2.0;
-var object1y = 0.0;
-var object1z = -10.0;
-
-var object2x = -2.0;
-var object2y = 0.0;
-var object2z = -10;
-
 function MatrixMul(a,b) //Mnożenie macierzy
-
 {
   let c = [
   0,0,0,0,
@@ -112,7 +103,7 @@ function CreateShpere(x,y,z,radius, numStepsElevation, numStepsAngle)
   
   let stepElevation = 90/numStepsElevation;
   let stepAngle = 360/numStepsAngle;
-  for(let elevation=-90; elevation < 90; elevation+= stepElevation)
+  for(let elevation=-90; elevation< 90; elevation+= stepElevation)
   {
     let radiusXZ = radius*Math.cos(elevation*Math.PI/180);
     let radiusY  = radius*Math.sin(elevation*Math.PI/180);
@@ -172,6 +163,7 @@ function CreateShpere(x,y,z,radius, numStepsElevation, numStepsAngle)
   
   return [vertexPosition, vertexColor, vertexCoords, vertexNormal];
 }
+
 
 function startGL() 
 {
@@ -247,7 +239,7 @@ function startGL()
   let vertexNormal;
   
   [vertexPosition, vertexColor, vertexCoords, vertexNormal] = CreateShpere(0,0,0,2, 6, 12); 
-
+  
   vertexPositionBuffer = gl.createBuffer(); //Stworzenie tablicy w pamieci karty graficznej
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPosition), gl.STATIC_DRAW);
@@ -284,6 +276,17 @@ function startGL()
   }
   textureImg.src="Tex.png"; //Nazwa obrazka
   
+  textureBuffer2 = gl.createTexture();
+  var textureImg2 = new Image();
+  textureImg2.onload = function() { //Wykonanie kodu automatycznie po załadowaniu obrazka
+    gl.bindTexture(gl.TEXTURE_2D, textureBuffer2);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureImg2); //Faktyczne załadowanie danych obrazu do pamieci karty graficznej
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); //Ustawienie parametrów próbkowania tekstury
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  }
+  textureImg2.src="Tex2.png"; //Nazwa obrazka
+  
   //Macierze opisujące położenie wirtualnej kamery w przestrzenie 3D
   let aspect = gl.viewportWidth/gl.viewportHeight;
   let fov = 45.0 * Math.PI / 180.0; //Określenie pola widzenia kamery
@@ -302,22 +305,27 @@ function startGL()
 var angleZ = 0.0;
 var angleY = 0.0;
 var angleX = 0.0;
-var tz = 8.0;
+var tz = -8.0;
+
+var object1x = 2.0;
+var object1y = 0.0;
+var object1z = -0.0;
+
+var object2x = -2.0;
+var object2y = 0.0;
+var object2z = -0.0;
+
+var scale1 = 1.0;
+var scale2 = 0.5;
 
 var lightX = 10;
 var lightY = 0;
 var lightZ = 0;
 
+
 function Tick()
 {  
-    let uMVMatrix = [
-  1,0,0,0, //Macierz jednostkowa
-  0,1,0,0,
-  0,0,1,0,
-  0,0,0,1
-  ];
-
-let uMVMatrix1 = [
+  let uMVMatrix1 = [
   1,0,0,0, //Macierz jednostkowa
   0,1,0,0,
   0,0,1,0,
@@ -329,20 +337,6 @@ let uMVMatrix1 = [
   0,1,0,0,
   0,0,1,0,
   0,0,0,1
-  ];
-
-  let uMVObject1 = [
-  1,0,0,0,
-  0,1,0,0,
-  0,0,1,0,
-  object1x,object1y,object1z,1
-  ];
-
-  let uMVObject2 = [
-  1,0,0,0,
-  0,1,0,0,
-  0,0,1,0,
-  object2x,object2y,object2z,1
   ];
   
   let uMVRotZ = [
@@ -372,15 +366,54 @@ let uMVMatrix1 = [
   0,0,1,0,
   0,0,tz,1
   ];
+  
+  let uMVScale1 = [
+  scale1,0,0,0,
+  0,scale1,0,0,
+  0,0,scale1,0,
+  0,0,0,1
+  ];
+  
+  let uMVScale2 = [
+  scale2,0,0,0,
+  0,scale2,0,0,
+  0,0,scale2,0,
+  0,0,0,1
+  ];
+  
+  let uMVObject1 = [
+  1,0,0,0,
+  0,1,0,0,
+  0,0,1,0,
+  object1x,object1y,object1z,1
+  ];
 
-  uMVMatrix = MatrixMul(uMVMatrix,uMVRotX);
-  uMVMatrix = MatrixMul(uMVMatrix,uMVRotY);
-  uMVMatrix = MatrixMul(uMVMatrix,uMVRotZ);
-  uMVMatrix = MatrixMul(uMVMatrix,uMVTranslateZ);
+  let uMVObject2 = [
+  1,0,0,0,
+  0,1,0,0,
+  0,0,1,0,
+  object2x,object2y,object2z,1
+  ];
+  
+  
+  uMVMatrix1 = MatrixMul(uMVMatrix1,uMVScale1);
+  uMVMatrix1 = MatrixMul(uMVMatrix1,uMVObject1);
+  uMVMatrix1 = MatrixMul(uMVMatrix1,uMVRotX);
+  uMVMatrix1 = MatrixMul(uMVMatrix1,uMVRotY);
+  uMVMatrix1 = MatrixMul(uMVMatrix1,uMVRotZ);
+  uMVMatrix1 = MatrixMul(uMVMatrix1,uMVTranslateZ);
+  
+  uMVMatrix2 = MatrixMul(uMVMatrix2,uMVScale2);
+  uMVMatrix2 = MatrixMul(uMVMatrix2,uMVObject2);
+  uMVMatrix2 = MatrixMul(uMVMatrix2,uMVRotX);
+  uMVMatrix2 = MatrixMul(uMVMatrix2,uMVRotY);
+  uMVMatrix2 = MatrixMul(uMVMatrix2,uMVRotZ);
+  uMVMatrix2 = MatrixMul(uMVMatrix2,uMVTranslateZ);
+  
   //alert(uPMatrix);
   
-//Render Scene
-gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight); 
+  //Render Scene
+  gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight); 
   gl.clearColor(1.0,0.0,0.0,1.0); //Wyczyszczenie obrazu kolorem czerwonym
   gl.clearDepth(1.0);             //Wyczyścienie bufora głebi najdalszym planem
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -418,6 +451,7 @@ gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
   
   //Drugi Obiekt
   gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "uMVMatrix"), false, new Float32Array(uMVMatrix2));
+  gl.bindTexture(gl.TEXTURE_2D, textureBuffer2);
   gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffer.numItems*vertexPositionBuffer.itemSize); //Faktyczne wywołanie rendrowania
    
   setTimeout(Tick,100);
@@ -447,5 +481,6 @@ function handlekeydown(e)
 <body onload="startGL()" onkeydown="handlekeydown(event)">
 <canvas id="canvas3D" width="640" height="480" style="border: solid black 1px"></canvas>
 <img id="textureImg" src="Tex.png">
+<img id="textureImg2" src="Tex2.png">
 </body>
 </html>
